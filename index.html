@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historia Transakcji</title>
+    <link rel="stylesheet" href="./assets/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- background -->
+    <div class="background">
+        <img src="./assets/stock-market-chart-technology-blue-background.jpg" alt="market-image">
+    </div>
+
+
+
+    <!-- User not logged in -->
+    <section class="cointainer" id="about">
+
+        <div class="btn-container">
+            <button id="register-btn">Rejestracja</button>
+            <button id="login-btn">Logowanie</button>
+        </div>
+    </section>
+        
+
+
+
+
+    <!-- Login form -->
+    <section class="cointainer" id="login">
+        <div class="btn-container">
+            <button id="register-btn1">Rejestracja</button>
+        </div>
+
+
+        <div class="container-form">
+
+            <form class="form" id="login-form" method="post">
+                <div class="form-row">
+                    <label for="username">Nazwa użytkownika/Email</label>
+                    <input type="text" name="name"id="user-name" required>
+                </div>
+                <div class="form-row">
+                    <label for="password">Hasło</label>
+                    <input type="password" name="password" id="login-password" required>
+                </div>
+                <div class="form-row">
+                    <button type="submit" class="submit-btn">Zaloguj</button>
+                </div>
+            </form>
+    
+        </div>
+    </section>
+
+
+
+
+
+    <!-- Registration form -->
+    <section class="cointainer" id="register">
+        <div class="btn-container">
+            <button id="login-btn1">Logowanie</button>
+        </div>
+
+        <div class="container-form"> 
+
+            <form class="form" id="register-form" name="register-form" method="post">
+                <div class="form-row">
+                    <label for="username">Nazwa użytkownika</label>
+                    <input type="text" name="name" id="username" required>
+                </div>
+                <div class="form-row">
+                    <label for="password">Hasło</label>
+                    <input type="password" name="password" sid="password" required>
+                </div>
+                <div class="form-row">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" required>
+                </div>
+                <div class="form-row">
+                    <label for="email">Potwierdź email</label>
+                    <input type="email"  name="confirm-email" id="confirm-email" required>
+                </div>
+                <div class="form-row">
+                    <button type="submit" class="submit-btn" id="submit-btn" value="submit">Zarejestruj</button>
+                </div>
+            </form>
+            
+        </div>
+    </section>
+
+
+
+
+    <!-- User logged in -->
+    <section class="cointainer login-display" id="dashboard">
+        <div class="btn-container">
+            <button id="logout-btn">Wyloguj</button>
+        </div>
+
+        <div class="username-display">
+            <p id="username-display">Nazwa</p>
+        </div>
+
+        <canvas id="chart"></canvas>
+    </section>
+
+
+<script src="/code.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.1.2/chart.min.js"></script> -->
+</body>
+</html>
