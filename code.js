@@ -71,7 +71,15 @@ logoutButton.addEventListener("click",function(){
 
 
 
-// Registration
+// Registration form
+
+// ! Validate registration 
+
+function validateUsername(username) {
+    const usernameRegex = /^[a-zA-Z0-9]{6,16}$/;
+    return usernameRegex.test(username);
+}
+
 
 const registerForm = document.getElementById("register-form");
 
@@ -84,53 +92,50 @@ registerForm.addEventListener("submit", e => {
     const confirmEmail = document.getElementById("confirm-email").value;
     
     // Validation data
+    if (username) {
+        const usernameValue = username.value;
+        if (!validateUsername(username)) {
+            alert("Nazwa użytkownika musi mieć od 6 do 16 znaków i składać się tylko z liter i cyfr");
+            return;
+        }
+    }
    
-    if(email !== confirmEmail){
+    if (email !== confirmEmail) {
         alert("Adresy email nie są takie same");
         return;
     }
-
-    if(username.length < 6 || username.length > 16){
-        alert("Nazwa użytkownika musi mieć od 6 do 16 znaków");
-        return;
-    }
-
-    if(!username.match(/^[A-za-z0-9]+$/)){
-        alert("Nazwa użytkownika może zawierać tylko litery i cyfry");
-        return;
-    }
-
+  
     if (password.length < 6) {
-        alert("Hasło musi zawierać co najmniej 6 znaków");
+        alert("Hasło musi mieć co najmniej 6 znaków");
         return;
-    }
-
-
+        }
     
+    
+
 
     // Sending data to server
-    fetch("/register",{
-        method: "POST", 
-        body: JSON.stringify({username, password, email}),
-        headers: {"Content-Type" : "application/json"}
+
+    fetch("/register", {
+        method: "POST",
+        body: JSON.stringify({ username, password, email }),
+        headers: {"Content-Type": "application/json"}
     })
-    
-    .then(response => response.json())
-    .then(data => {
-        if (data.success){
-            alert("Rejestracja zakończona sukcesem");
-            showDashboard;
-            localStorage.setItem("username", username);
-            localStorage.setItem("password", password);
-            localStorage.setItem("email", email);
-        } else {
-            alert("Błąd podczas rejestracji")
-        }
-    })
-    .catch(error => {
-        console.log("Błąd wysyłania danych", error);
-    })
-    
+
+        .then(response => response.JSON())
+        .then(data => {
+            if (data.success) {
+                alert("Rejestracja zakończona sukcesem");
+                showDashboard();
+                localStorage.setItem("username", username);
+                localStorage.setItem("password", password);
+                localStorage.setItem("email", email);
+            } else {
+                alert("Błąd podczas rejestacji");
+            }
+        })
+        .catch(error => {
+            console.log("Błąd wysyłania dancych", error);
+        })
     
 });
 
