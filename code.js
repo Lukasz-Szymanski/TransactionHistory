@@ -71,14 +71,15 @@ logoutButton.addEventListener("click",function(){
 
 
 
-// Registration form
+// Registration form and sending data to server
 
 // ! Validate registration 
-
 function validateUsername(username) {
     const usernameRegex = /^[a-zA-Z0-9]{6,16}$/;
     return usernameRegex.test(username);
 }
+
+
 
 
 const registerForm = document.getElementById("register-form");
@@ -117,25 +118,25 @@ registerForm.addEventListener("submit", e => {
 
     fetch("/register", {
         method: "POST",
-        body: JSON.stringify({ username, password, email }),
+        body: JSON.stringify({username, password, email}),
         headers: {"Content-Type": "application/json"}
     })
 
-        .then(response => response.JSON())
+        .then(response => response.json())
         .then(data => {
             if (data.success) {
                 alert("Rejestracja zakończona sukcesem");
-                showDashboard();
                 localStorage.setItem("username", username);
                 localStorage.setItem("password", password);
                 localStorage.setItem("email", email);
+                showDashboard();
             } else {
                 alert("Błąd podczas rejestacji");
             }
         })
         .catch(error => {
             console.log("Błąd wysyłania dancych", error);
-        })
+        });
     
 });
 
