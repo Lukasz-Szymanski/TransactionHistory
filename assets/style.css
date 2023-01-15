@@ -81,3 +81,21 @@
 
 
 /* Dashboard display */
+
+.login-container {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row-reverse;
+}
+
+.login-container button {
+    width: 100px;
+    margin: 5px;
+}
+.user-display {
+    background-color: rgb(235, 229, 230);
+    width: fit-content;
+    height: fit-content;
+    margin: 5px;
+    border-radius: 2px;
+}
