@@ -39,10 +39,18 @@ function showDashboard() {
     loginSection.style.display = "none";
     registerSection.style.display = "none";
     dashboardSection.style.display = "block";
-    aboutSection.style.display = "none";   
+    aboutSection.style.display = "none";  
 } 
     
-    
+if (localStorage.getItem("loggedIn")){
+    showDashboard();
+} else {
+    showAbout();
+}
+
+
+
+
 
 // register and login buttons 
 registerButton.addEventListener("click",function(){
@@ -71,7 +79,8 @@ logoutButton.addEventListener("click",function(){
 
 
 
-// Registration form and sending data to server
+
+// Registration form and sending data to localStorage
 
 // ! Validate registration 
 function validateUsername(username) {
@@ -79,9 +88,29 @@ function validateUsername(username) {
     return usernameRegex.test(username);
 }
 
+// ! Users array 
+const users = [];
+
+function isUsernameUnique(username) {
+    for (let i = 0; i < users.length; i++) {
+        if (users[i].username === username) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function isEmailUnique(email) {
+    for (let i = 0; i < users.length; i++) {
+        if (users[i].email === email) {
+            return false;
+        }
+    }
+    return true;
+}
 
 
-
+// Form action 
 const registerForm = document.getElementById("register-form");
 
 registerForm.addEventListener("submit", e => {
@@ -92,7 +121,19 @@ registerForm.addEventListener("submit", e => {
     const email = document.getElementById("email").value;
     const confirmEmail = document.getElementById("confirm-email").value;
     
-    // Validation data
+    // ! Checking the uniqueness of the username and email address
+    if (!isUsernameUnique(username)) {
+        alert("Nazwa użytkownika jest już zajęta");
+        return;
+    }
+
+    if (!isEmailUnique(email)) { 
+        alert("Adres email jest już zarejestrowany");
+        return;
+    }
+
+
+    // ! Validation data
     if (username) {
         const usernameValue = username.value;
         if (!validateUsername(username)) {
@@ -109,55 +150,97 @@ registerForm.addEventListener("submit", e => {
     if (password.length < 6) {
         alert("Hasło musi mieć co najmniej 6 znaków");
         return;
+    }
+
+    users.push({ username, email });
+    
+
+    localStorage.setItem("username", username);
+    localStorage.setItem("password", password);
+    localStorage.setItem("email", email);
+    showDashboard();   
+});
+
+
+// Login action
+
+const loginForm = document.getElementById("login-form");
+
+loginForm.addEventListener("submit", e => {
+    e.preventDefault();
+
+    const usernameOrEmail = document.getElementById("username-email").value;
+    const password = document.getElementById("login-password").value;
+
+
+    let user;
+    if (localStorage.getItem("username") === usernameOrEmail) {
+        user = {
+            username: localStorage.getItem("username"),
+            email: localStorage.getItem("email"),
+            password: localStorage.getItem("password")
         }
-    
-    
+    } else if (localStorage.getItem("email") === usernameOrEmail) {
+        user = {
+            username: localStorage.getItem("username"),
+            email: localStorage.getItem("email"),
+            password: localStorage.getItem("password")
+        }
+    }
 
-
-    // Sending data to server
-
-    fetch("/register", {
-        method: "POST",
-        body: JSON.stringify({username, password, email}),
-        headers: {"Content-Type": "application/json"}
-    })
-
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert("Rejestracja zakończona sukcesem");
-                localStorage.setItem("username", username);
-                localStorage.setItem("password", password);
-                localStorage.setItem("email", email);
-                showDashboard();
-            } else {
-                alert("Błąd podczas rejestacji");
-            }
-        })
-        .catch(error => {
-            console.log("Błąd wysyłania dancych", error);
-        });
-    
+    if (user) {
+        if (user.password === password) {
+            alert("Zalogowano pomyślnie");
+            localStorage.setItem("isLoggedIn", true);
+            showDashboard();
+        } else {
+            alert("Niepoprawne hasło");
+        }
+    } else {
+        alert("Niepoprawna nazwa użytkownika lub email");
+    }
 });
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-if (localStorage.getItem("loggedIn")){
+if (localStorage.getItem("isLoggedIn") === "true") {
     showDashboard();
-} else {
-    showAbout();
 }
+
+
+
+// Username display 
+const usernameDisplay = document.getElementById("username-display");
+const storedUsername = localStorage.getItem("username");
+usernameDisplay.innerHTML = storedUsername;
+
+
+
+
+// API 
+
+function getData() {
+    return fetch("https://api.npoint.io/38edf0c5f3eb9ac768bd")
+        .then(response => response.json())
+        .then(data => {
+            return data;
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
