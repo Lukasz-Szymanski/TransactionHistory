@@ -40,6 +40,12 @@ function showDashboard() {
     registerSection.style.display = "none";
     dashboardSection.style.display = "block";
     aboutSection.style.display = "none";  
+
+
+    // Username display
+    const usernameDisplay = document.getElementById("username-display");
+    const storedUsername = localStorage.getItem("username");
+    usernameDisplay.innerHTML = storedUsername;
 } 
     
 if (localStorage.getItem("loggedIn")){
@@ -82,13 +88,13 @@ logoutButton.addEventListener("click",function(){
 
 // Registration form and sending data to localStorage
 
-// ! Validate registration 
+    // Validate registration 
 function validateUsername(username) {
     const usernameRegex = /^[a-zA-Z0-9]{6,16}$/;
     return usernameRegex.test(username);
 }
 
-// ! Users array 
+    // Users array 
 const users = [];
 
 function isUsernameUnique(username) {
@@ -121,7 +127,7 @@ registerForm.addEventListener("submit", e => {
     const email = document.getElementById("email").value;
     const confirmEmail = document.getElementById("confirm-email").value;
     
-    // ! Checking the uniqueness of the username and email address
+        //  Checking the uniqueness of the username and email address
     if (!isUsernameUnique(username)) {
         alert("Nazwa użytkownika jest już zajęta");
         return;
@@ -133,7 +139,7 @@ registerForm.addEventListener("submit", e => {
     }
 
 
-    // ! Validation data
+        //  Validation data
     if (username) {
         const usernameValue = username.value;
         if (!validateUsername(username)) {
@@ -209,26 +215,33 @@ if (localStorage.getItem("isLoggedIn") === "true") {
 
 
 
-// Username display 
-const usernameDisplay = document.getElementById("username-display");
-const storedUsername = localStorage.getItem("username");
-usernameDisplay.innerHTML = storedUsername;
 
 
 
 
-// API 
 
-function getData() {
-    return fetch("https://api.npoint.io/38edf0c5f3eb9ac768bd")
-        .then(response => response.json())
-        .then(data => {
-            return data;
-        })
-        .catch(error => {
-            console.log(error);
-        });
-}
+
+
+
+// Fetch API 
+fetch('https://api.npoint.io/38edf0c5f3eb9ac768bd')
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+    const transactions = data.transactions;
+    const transactionTypes = data.transacationTypes;
+    transactions.forEach(transaction => {
+      console.log(`Data: ${transaction.date}`);
+      console.log(`Typ transakcji: ${transactionTypes[transaction.type]}`);
+      console.log(`Kwota: ${transaction.amount}`);
+      console.log(`Saldo: ${transaction.balance}`);
+      console.log(`Opis: ${transaction.description}\n`);
+    });
+  });
+
+    
+
+
 
 
 
