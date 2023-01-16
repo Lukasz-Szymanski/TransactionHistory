@@ -229,15 +229,62 @@ fetch('https://api.npoint.io/38edf0c5f3eb9ac768bd')
   .then(data => {
     console.log(data);
     const transactions = data.transactions;
-    const transactionTypes = data.transacationTypes;
-    transactions.forEach(transaction => {
-      console.log(`Data: ${transaction.date}`);
-      console.log(`Typ transakcji: ${transactionTypes[transaction.type]}`);
-      console.log(`Kwota: ${transaction.amount}`);
-      console.log(`Saldo: ${transaction.balance}`);
-      console.log(`Opis: ${transaction.description}\n`);
+      const transactionTypes = data.transacationTypes;
+      let type1Data = [], type2Data = [], type3Data = [], type4Data = [];
+      transactions.forEach(transaction => {
+          switch (transaction.type) {
+              case 1:
+                  type1Data.push(transaction.amount);
+                  break;
+            case 2:
+                type2Data.push(transaction.amount);
+                break;
+            case 3:
+                type3Data.push(transaction.amount);
+                break;
+            case 4:
+                type4Data.push(transaction.amount);
+                break;
+            }
+      })
+      
+        let ctx = document.getElementById('myChart').getContext('2d');
+        let chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Type 1', 'Type 2', 'Type 3', 'Type 4'],
+            datasets: [{
+                label: 'Transactions',
+                data: [type1Data.reduce((a, b) => a + b, 0), type2Data.reduce((a, b) => a + b, 0), type3Data.reduce((a, b) => a + b, 0), type4Data.reduce((a, b) => a + b, 0)],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
     });
+
   });
+    
+  
 
     
 
