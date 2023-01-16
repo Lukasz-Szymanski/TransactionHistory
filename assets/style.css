@@ -88,7 +88,7 @@
     flex-direction: row-reverse;
 }
 
-.login-container button {
+.logout-btn{
     width: 100px;
     margin: 5px;
 }
@@ -97,5 +97,20 @@
     width: fit-content;
     height: fit-content;
     margin: 5px;
+    padding: 2px;
     border-radius: 2px;
 }
+
+
+/* Canvas display */
+
+.canvas {
+    display: flex;
+    justify-content: center;
+}
+
+#myChart  {
+    width: 90%;
+    background-color: white;
+    opacity: 0.5;
+} 
