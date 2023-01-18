@@ -98,13 +98,30 @@
 
 
     <!-- User logged in -->
-    <section class="cointainer login-display" id="dashboard">
+    <section class="cointainer" id="dashboard">
         <div class="login-container">
             <button class="logout-btn" id="logout-btn">Wyloguj</button>
             <p class="user-display" id="username-display"></p>
         </div>        
-        <div class="canvas">
-            <canvas id="myChart"></canvas>
+        <div class="transaction-container">
+            <div class="chart-section">
+                <canvas id="doughnutChart"></canvas>
+                <canvas id="barChart"></canvas>
+            </div>
+            <div class="transaction-section">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Typ</th>
+                            <th>Kwota</th>
+                            <th>Saldo</th>
+                            <th>Opis</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transaction-table"></tbody>
+                </table>
+            </div>
         </div>
     
     </section>
