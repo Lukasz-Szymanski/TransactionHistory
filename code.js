@@ -224,86 +224,240 @@ if (localStorage.getItem("isLoggedIn") === "true") {
 
 
 // Fetch API 
+//pobranie danych z API
 fetch('https://api.npoint.io/38edf0c5f3eb9ac768bd')
   .then(response => response.json())
   .then(data => {
-    console.log(data);
-    const transactions = data.transactions;
-      const transactionTypes = data.transacationTypes;
-      let type1Data = [], type2Data = [], type3Data = [], type4Data = [];
-      transactions.forEach(transaction => {
-          switch (transaction.type) {
-              case 1:
-                  type1Data.push(transaction.amount);
-                  break;
-            case 2:
-                type2Data.push(transaction.amount);
-                break;
-            case 3:
-                type3Data.push(transaction.amount);
-                break;
-            case 4:
-                type4Data.push(transaction.amount);
-                break;
+    //tabela transakcji
+    const transactionsTable = document.getElementById("transaction-table");
+    let transactionsHTML = "";
+
+    //dane wykresów
+    const transactionTypes = data.transacationTypes;
+    let transactionTypesData = {};
+    let transactionBalancesByDate = {};
+
+    //iteracja po transakcjach
+    data.transactions.forEach(transaction => {
+      //dodanie transakcji do tabeli
+      transactionsHTML += `<tr>
+      <td>${transaction.date}</td>
+        <td>${transactionTypes[transaction.type]}</td>
+        <td>${transaction.amount}</td>
+        <td>${transaction.balance}</td>
+        <td>${transaction.description}</td>
+      </tr>`;
+
+      //dodanie danych do wykresów
+      if (!transactionTypesData[transactionTypes[transaction.type]]) {
+        transactionTypesData[transactionTypes[transaction.type]] = 0;
+      }
+      transactionTypesData[transactionTypes[transaction.type]]++;
+
+      if (!transactionBalancesByDate[transaction.date]) {
+        transactionBalancesByDate[transaction.date] = 0;
+      }
+      transactionBalancesByDate[transaction.date] = transaction.balance;
+    });
+
+    //wstawienie tabeli do HTML
+    transactionsTable.innerHTML = transactionsHTML;
+
+    //przygotowanie danych do wykresów
+    let transactionTypesChartData = [];
+    for (let type in transactionTypesData) {
+      transactionTypesChartData.push({
+        label: type,
+        data: transactionTypesData[type]
+      });
+    }
+
+    let transactionBalancesChartData = {
+      labels: [],
+      datasets: [{
+        label: 'Saldo',
+        data: []
+      }]
+    };
+    for (let date in transactionBalancesByDate) {
+      transactionBalancesChartData.labels.push(date);
+      transactionBalancesChartData.datasets[0].data.push(transactionBalancesByDate[date]);
+    }
+});
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Wykres słupkowy 
+
+  //pobranie danych z API
+  fetch('https://api.npoint.io/38edf0c5f3eb9ac768bd')
+    .then(response => response.json())
+    .then(data => {
+    //   Przetworzenie danych na procentowy podział transakcji 
+        
+        let transactions = data.transactions;
+        let transactionsByType = {};
+        transactions.forEach(transaction => {
+            if (transactionsByType[transaction.type]) {
+                transactionsByType[transaction.type]++;
+            } else {
+                transactionsByType[transaction.type] = 1;
             }
-      })
-      
-        let ctx = document.getElementById('myChart').getContext('2d');
-        let chart = new Chart(ctx, {
+        });
+
+    // Stworzenie tablicy do przechowywania procentowego podziału transakcji
+
+        let transactionsPercentages = [];
+        for (let type in transactionsByType) {
+            let percentage = (transactionsByType[type] / transactions.length) * 100;
+            transactionsPercentages.push({
+                type: type,
+                percentage: percentage
+            });
+        }
+        [{type: 1, percenage: 25}, {type: 2, percentage: 50}, {type: 3, percentage: 25}]
+        
+      //przetworzenie danych
+      var labels = [];
+      var balance = [];
+      data.transactions.forEach(function(transaction) {
+        labels.push(transaction.date);
+        balance.push(transaction.balance);
+      });
+
+      //tworzenie wykresu słupkowego
+      var ctx = document.getElementById("barChart").getContext('2d');
+      var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Type 1', 'Type 2', 'Type 3', 'Type 4'],
+          labels: labels,
+          datasets: [{
+            label: "Saldo konta",
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: balance
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+        
+        
+    // Tworzenie wykresu kołowego 
+      var ctx = document.getElementById("doughnutChart").getContext('2d');
+      var chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ["Wydatki", "Wpływy", "Inne"],
             datasets: [{
-                label: 'Transactions',
-                data: [type1Data.reduce((a, b) => a + b, 0), type2Data.reduce((a, b) => a + b, 0), type3Data.reduce((a, b) => a + b, 0), type4Data.reduce((a, b) => a + b, 0)],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)'
-                ],
+                data: [10, 5, 5],
+                backgroundColor: ["#ff6384", "#36a2eb", "#cc65fe"],
                 borderWidth: 1
             }]
         },
         options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
+            responsive: true,
+            legend: {
+                position: "top",
+            },
+            title: {
+                display: true, 
+                text: "Procentowy podział transakcji wg ich typu"
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
             }
         }
+
+        
+      });
     });
 
-  });
+
+
+// Wykres kołowy 
+
+
+// fetch('https://api.npoint.io/38edf0c5f3eb9ac768bd')
+// .then(response => response.json())
+// .then(data => {
+//     var transaction = data.transactions;
+//     var transactionTypes = data.transacationTypes;
+//     var transactionCounts = {};
+//     var transactionData = [];
     
-  
-
+//     transaction.forEach(transaction => {
+//         if (transactionCounts[transaction.type]) {
+//             transactionCounts[transaction.type]++;
+//         } else {
+//             transactionCounts[transaction.type] = 1;
+//         }
+//     });
     
+//     var ctx = document.getElementById("doughnutChart").getContext("2d");
+//     for (var type in transactionCounts) {
+//         var count = transactionCounts[type];
+//         var percentage = (count / transaction.length) * 100;
+//         var label = transactionTypes[type];
+//         transactionData.push({
+//             label: label,
+//             data: percentage,
+//             backgroundColor: "rgba(255, 99, 132, 0.2)",
+//             borderColor: "rgba(255, 99, 132, 1)"
+//         });
+//     }
+    
+//         var pieChart = new Chart(ctx, {
+//             type: 'pie',
+//             data: {
+//                 labels: [],
+//                 dataets: [{
+//                     data: [],
+//                     backgroundColor: [],
+//                     borderColor: []
+//                 }]
+//             },
+//             options: {
+//                 legend: {
+//                     position: 'bottom'
+//                 }
+//             }
+//         });
+
+//         pieChart.data.labels = transactionData.map(d => d.label);
+//         pieChart.data.datasets[0].data = transactionData.map(d => d.data);
+//         pieChart.data.datasets[0].backgroundColor = transactionData.map(d => d.backgroundColor);
+//         pieChart.data.datasets[0].borderColor = transactionData.map(d => d.borderColor);
+//         pieChart.update();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//     });
