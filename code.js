@@ -214,6 +214,8 @@ if (localStorage.getItem("isLoggedIn") === "true") {
 }
 
 
+
+
 // Downloading data from the API 
 
 // Transaction history
@@ -277,6 +279,9 @@ fetch('https://api.npoint.io/38edf0c5f3eb9ac768bd')
     }
 });
 
+
+// Creating charts
+
 //Downloading data from the API
   fetch('https://api.npoint.io/38edf0c5f3eb9ac768bd')
   .then(response => response.json())
@@ -306,8 +311,8 @@ fetch('https://api.npoint.io/38edf0c5f3eb9ac768bd')
       [{ type: 1, percenage: 25 }, { type: 2, percentage: 50 }, { type: 3, percentage: 25 }]
       
       //data processing
-      var labels = [];
-      var balance = [];
+      const labels = [];
+      const balance = [];
       data.transactions.forEach(function (transaction) {
           labels.push(transaction.date);
           balance.push(transaction.balance);
@@ -363,7 +368,7 @@ fetch('https://api.npoint.io/38edf0c5f3eb9ac768bd')
       var chart = new Chart(ctx, {
           type: 'doughnut',
           data: {
-              labels: ["Wydatki", "Wpływy", "Inne"],
+              labels: ["Wydatki", "Wpływy",  "Inne"],
               datasets: [{
                   data: [10, 5, 5],
                   backgroundColor: ["#ff6384", "#36a2eb", "#cc65fe"],
@@ -396,7 +401,5 @@ fetch('https://api.npoint.io/38edf0c5f3eb9ac768bd')
           }
       });
   })
-
-
 
 
