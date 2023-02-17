@@ -12,7 +12,7 @@ The application was created on:
 * JavaScript 
 * ChartJS
 
-without a framework.
+
 
 ## Functionality
 * The created application allows you to register a user whose data is stored in the browser. 
